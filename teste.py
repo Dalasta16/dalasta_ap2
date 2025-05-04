@@ -75,6 +75,18 @@ def giro_tesouraria():
     return [Capital_de_Giro, Necessidade_de_CG, Saldo_Tesouraria]
 
 
+def Indices_Endividamento():
+    Passivo_C = valor_contabil(df, '^2.0', '^passivo cir')
+    Passivo_NC = valor_contabil(df, '^2.0*', '^passivo n.o cir')
+    Patrimonio_L = valor_contabil(df,'^2.*','patrim.nio')
+    CtCp = (Passivo_C+Passivo_NC)/Patrimonio_L
+    Endividamento_geral = (Passivo_C+Passivo_NC)/(Passivo_C+Passivo_NC+Patrimonio_L)
+    Ativo_T = valor_contabil(df,'^1.*','ativo total')
+    Solvencia = Ativo_T/(Passivo_C+Passivo_NC)
+    Composicao_E = Passivo_C/(Passivo_C+Passivo_NC)
+    return [CtCp, Endividamento_geral, Solvencia, Composicao_E]
+
+
 #teste
 df = dataframe('VULC4', '20244T')
 df[df['descricao'].str.contains('dividendos e', case=False)][['conta','descricao','valor']]
