@@ -213,35 +213,39 @@ def indice_nao_realizavel(indices_basicos):
     }
 
 def indices_ciclos(basicos_23, basicos_24):
-    Custo_MV_23 = basicos_23['Custo_MV']
-    Clientes = valor_contabil(df,'^1.*','clientes')
-    Receita_liquida = valor_contabil(df,'^3.*','receita')
-    Fornecedor = valor_contabil(df,'^2.*','fornecedor')
-
-
-    PME = (estoque med*360)/CMV
-    estoque_med = (Estoque_23+Estoque_24)/2
-    Custo_MV = valor_contabil(df,'^3.*','custo')
-    PM_Estocagem = ((estoque_med*360)/Custo_MV)*(-1)
+    Clientes_23 = basicos_23['Clientes']
+    Fornecedor_23 = basicos_23['Fornecedor']
+    Estoque_23 = basicos_23['Estoque']
+    Custo_MV_24 = basicos_24['Custo_MV']
+    Clientes_24 = basicos_24['Clientes']
+    Receita_liquida_24 = basicos_24['Receita_liquida']
+    Fornecedor_24 = basicos_24['Fornecedor']
+    Estoque_24 = basicos_24['Estoque']
+    
+    #PME
+    Estoque_med = (Estoque_23+Estoque_24)/2
+    PM_Estocagem = ((Estoque_med*360)/Custo_MV_24)*(-1)
     #PMRV= (clientes med*360/Receita liquida))
-    clientes_23 = valor_contabil(df_23,'^1.*','clientes')
-    clientes_24 = valor_contabil(df,'^1.*','clientes')
-    clientes_med = (clientes_23+clientes_24)/2
-    Receita_liquida = valor_contabil(df,'^3.*','receita')
-    PM_Recebimento_V = (clientes_med*360)/Receita_liquida
+    Clientes_med = (Clientes_23+Clientes_24)/2
+    PM_Recebimento_V = (Clientes_med*360)/Receita_liquida_24
     #PMPF(fornecedor med*360/(Compra = Estoque Final - Estoque Inicial +CMV))
-    fornecedor_23 = valor_contabil(df_23,'^2.*','fornecedor')
-    fornecedor_24 = valor_contabil(df,'^2.*','fornecedor')
-    fornecedor_med = (fornecedor_23+fornecedor_24)/2
-    compra = Estoque_24 - Estoque_23 + Custo_MV
-    PM_Pagamento_F = ((fornecedor_med*360)/compra)*(-1)
+    Fornecedor_med = (Fornecedor_23+Fornecedor_24)/2
+    compra = Estoque_24 - Estoque_23 + Custo_MV_24
+    PM_Pagamento_F = ((Fornecedor_med*360)/compra)*(-1)
     #CO
     Ciclo_Operacional = PM_Estocagem + PM_Recebimento_V
     #CF
-    Ciclo_Financeiro = Ciclo_Operacional   - PM_Pagamento_F
+    Ciclo_Financeiro = Ciclo_Operacional - PM_Pagamento_F
     #CE
     Ciclo_Economico = PM_Estocagem
-    pass
+    return {
+        'PM_Estocagem'     : PM_Estocagem,
+        'PM_Recebimento_V' : PM_Recebimento_V,
+        'PM_Pagamento_F'   : PM_Pagamento_F,
+        'Ciclo_Operacional': Ciclo_Operacional,
+        'Ciclo_Financeiro' : Ciclo_Financeiro,
+        'Ciclo_Economico'  : Ciclo_Economico
+    }
 
 def main():
 
@@ -259,6 +263,7 @@ def main():
     
     list_df = []
     list_infos = []
+    list_ciclos = []
 
     for ticker in list_ticker:
         list_basicos = []
@@ -290,8 +295,9 @@ def main():
         ciclos = indices_ciclos(list_basicos[0], list_basicos[1])
         list_basicos.clear()
 
-        df_indices.append(ciclos)
+        list_ciclos.append(ciclos)
     
     print(len(list_infos))
+    print(len(list_ciclos))
 
 main()
