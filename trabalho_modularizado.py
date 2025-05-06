@@ -190,11 +190,14 @@ def indices_juros(indices_basicos):
     Lair = indices_basicos["Lair"]
     Despesa_Financeira = indices_basicos["Despesa_Financeira"]
 
+   #Custo médio ponderado de capital(CMPC)= Wi*Ki+We*Ke
+   #Wi(Peso dos fiananciamentos) e We(Peso do capital social)
     Wi = POn / Investimento
     We = Patrimonio_L / Investimento
     Aliquota = IR_Corrente / Lair
     Benefício_Tributário = Despesa_Financeira * Aliquota
     DF_Liquida = Despesa_Financeira - Benefício_Tributário
+    #Ki(quanto que foi pago em relacao a divida total(em %))
     Ki = DF_Liquida / POn
     Ke = 0.12
     Custo_MPC = (Wi * Ki) + (We * Ke)

@@ -17,7 +17,7 @@ def valor_contabil_2(df, conta, descricao):
 arquivo = 'C:\\Users\\CRDalas\\Desktop\\Programacao\\Análise de Dados\\Trabalho_Cont\\dados\\vulc.xlsx'
 df = pd.read_excel(arquivo)
 #pesquisar
-df[df['descricao'].str.contains('dividendos e lucros', case=False)][['conta','descricao','valor']]
+df[df['descricao'].str.contains('^', case=False)][['conta','descricao','valor']]
 
 
 #AC e PC
