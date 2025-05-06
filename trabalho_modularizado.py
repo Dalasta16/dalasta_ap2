@@ -132,8 +132,11 @@ def indices_giro_tesouraria(indices_basicos):
     Ativo_CO = Ativo_C - Ativo_CF
     Passivo_CF = (Emprestimos + Provisoes + Imposto_de_renda_PC + Dividendos)
     Passivo_CO = (Passivo_C - Passivo_CF)
+    #Capital de Giro
     Capital_de_Giro = Ativo_C - Passivo_C
+    #Necessidade de Capital de Giro
     Necessidade_de_CG = Ativo_CO - Passivo_CO
+    #Saldo Tesouraria
     Saldo_Tesouraria = Ativo_CF - Passivo_CF
 
     return {
@@ -250,8 +253,8 @@ def indices_ciclos(basicos_23, basicos_24):
 def main():
 
     list_ticker = []
-    list_ticker.append("AZZA3")
     list_ticker.append("VULC4")
+    list_ticker.append("AZZA3")
     list_ticker.append("GRND3")
     list_ticker.append("ALPA4")
     list_ticker.append("CAMB3")
