@@ -250,6 +250,12 @@ def indices_ciclos(basicos_23, basicos_24):
         'Ciclo_Economico'  : Ciclo_Economico
     }
 
+def print_dict(name, ticker, trimestre, data):
+    print(f"{name} — {ticker} — {trimestre}")
+    for key, value in data.items():
+        print(f"  {key}: {value}")
+    print()
+
 def main():
 
     list_ticker = []
@@ -296,13 +302,25 @@ def main():
             list_juros.append(juros)
             list_nao_realizavel.append(nao_realizavel)
 
+            print_dict("Índices Básicos",        ticker, trimestre, basicos)
+            print_dict("Índices de Liquidez",     ticker, trimestre, liquidas)
+            print_dict("Giro de Tesouraria",      ticker, trimestre, giro)
+            print_dict("Índice de Endividamento", ticker, trimestre, endividamento)
+            print_dict("Empréstimos",             ticker, trimestre, emprestimo)
+            print_dict("Índice de Juros",         ticker, trimestre, juros)
+            print_dict("Não Realizável",          ticker, trimestre, nao_realizavel)
+
         
         ciclos = indices_ciclos(list_basicos[0], list_basicos[1])
         list_basicos.clear()
 
         list_ciclos.append(ciclos)
-    
-    print((list_liquidez))
-    print((list_ciclos))
+
+        # imprime ciclos
+        header = f"Ciclos — {ticker} — {list_tri[0]} & {list_tri[1]}"
+        print(header)
+        for key, value in ciclos.items():
+            print(f"  {key}: {value}")
+        print()
 
 main()
