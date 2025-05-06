@@ -265,7 +265,12 @@ def main():
     list_tri.append("20244T")
     
     list_df = []
-    list_infos = []
+    list_liquidez = []
+    list_giro_tesouraria = []
+    list_endividamento = []
+    list_emprestimos = []
+    list_juros = []
+    list_nao_realizavel = []
     list_ciclos = []
 
     for ticker in list_ticker:
@@ -273,8 +278,6 @@ def main():
         for trimestre in list_tri:
             df = dataframe(ticker, trimestre)
             list_df.append(df)
-
-            df_indices = []
 
             basicos = indices_basicos(df)
             liquidas = indices_liquidez(basicos)
@@ -286,21 +289,20 @@ def main():
 
             list_basicos.append(basicos)
 
-            df_indices.append(liquidas)
-            df_indices.append(giro)
-            df_indices.append(endividamento)
-            df_indices.append(emprestimo)
-            df_indices.append(juros)
-            df_indices.append(nao_realizavel)
+            list_liquidez.append(liquidas)
+            list_giro_tesouraria.append(giro)
+            list_endividamento.append(endividamento)
+            list_emprestimos.append(emprestimo)
+            list_juros.append(juros)
+            list_nao_realizavel.append(nao_realizavel)
 
-            list_infos.append(df_indices)
         
         ciclos = indices_ciclos(list_basicos[0], list_basicos[1])
         list_basicos.clear()
 
         list_ciclos.append(ciclos)
     
-    print(len(list_infos))
-    print(len(list_ciclos))
+    print((list_liquidez))
+    print((list_ciclos))
 
 main()
