@@ -223,6 +223,32 @@ def indice_nao_realizavel(indices_basicos):
         'Indice_PL' : Indice_PL
     }
 
+def indices_rentabilidade(indices_basicos):
+    Investimento = indices_basicos['Investimento']
+    Ebit = indices_basicos['Ebit']
+    Amortizacao = indices_basicos['Amortizacao']
+    IR_Corrente = indices_basicos['IR_Corrente']
+    Lucro_Liquido = indices_basicos['Lucro_Liquido']
+    Patrimonio_L = indices_basicos['Patrimonio_L']
+
+    #Lucros antes da amortizacao e depois do imposto de renda
+    Ebitda = Ebit + Amortizacao
+    Nopat = Ebit - IR_Corrente
+    #Retorno de Investimento(de financiamentos e capital social)
+    Roi = Nopat/Investimento
+    #Retorno do patrimonio(apenas capital social)
+    Roe = Lucro_Liquido/Patrimonio_L
+    #Grau de Alavancagem financeira
+    Gaf = Roe/Roi
+
+    return {
+        'Ebitda': Ebitda,
+        'Nopat' : Nopat,
+        'Roi'   : Roi,
+        'Roe'   : Roe,
+        'Gaf'   : Gaf
+    }
+
 def indices_ciclos(basicos_23, basicos_24):
     Clientes_23 = basicos_23['Clientes']
     Fornecedor_23 = basicos_23['Fornecedor']
@@ -256,33 +282,6 @@ def indices_ciclos(basicos_23, basicos_24):
         'Ciclo_Operacional': Ciclo_Operacional,
         'Ciclo_Financeiro' : Ciclo_Financeiro,
         'Ciclo_Economico'  : Ciclo_Economico
-    }
-
-def indices_rentabilidade(indices_basicos):
-    Pon = indices_basicos['POn']
-    Investimento = indices_basicos['Investimento']
-    Ebit = indices_basicos['Ebit']
-    Amortizacao = indices_basicos['Amortizacao']
-    IR_Corrente = indices_basicos['IR_Corrente']
-    Lucro_Liquido = indices_basicos['Lucro_Liquido']
-    Patrimonio_L = indices_basicos['Patrimonio_L']
-
-    #Lucros antes da amortizacao e depois do imposto de renda
-    Ebitda = Ebit + Amortizacao
-    Nopat = Ebit - IR_Corrente
-    #Retorno de Investimento(de financiamentos e capital social)
-    Roi = Nopat/Investimento
-    #Retorno do patrimonio(apenas capital social)
-    Roe = Lucro_Liquido/Patrimonio_L
-    #Grau de Alavancagem financeira
-    Gaf = Roe/Roi
-
-    return {
-        'Ebitda': Ebitda,
-        'Nopat' : Nopat,
-        'Roi'   : Roi,
-        'Roe'   : Roe,
-        'Gaf'   : Gaf
     }
 
 def print_dict(name, ticker, trimestre, data):

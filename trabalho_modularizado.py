@@ -260,7 +260,6 @@ def indices_ciclos(basicos_23, basicos_24):
     }
 
 def indices_rentabilidade(indices_basicos):
-    Pon = indices_basicos['POn']
     Investimento = indices_basicos['Investimento']
     Ebit = indices_basicos['Ebit']
     Amortizacao = indices_basicos['Amortizacao']
