@@ -1,6 +1,5 @@
 import pandas as pd
 import requests
-import streamlit
 
 def dataframe(ticker, trimestre):
     token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ3OTEyOTAwLCJpYXQiOjE3NDUzMjA5MDAsImp0aSI6IjQ1MWIyZWM5YTAxMTQ4YjRiZDYxZDQ4MGI0YmM1OWU1IiwidXNlcl9pZCI6NjB9.kssQqfnXMDQxA_gny7-6Hfoaj5DGhfFjYAh_CwC6Yp8"
@@ -291,76 +290,3 @@ def print_dict(name, ticker, trimestre, data):
     for key, value in data.items():
         print(f"  {key}: {value}")
     print()
-
-def main():
-
-    list_ticker = []
-    list_ticker.append("VULC4")
-    list_ticker.append("AZZA3")
-    list_ticker.append("GRND3")
-    list_ticker.append("ALPA4")
-    list_ticker.append("CAMB3")
-    list_ticker.append("SBFG3")
-
-    list_tri = []
-    list_tri.append("20234T")
-    list_tri.append("20244T")
-    
-    list_df = []
-    list_liquidez = []
-    list_giro_tesouraria = []
-    list_endividamento = []
-    list_emprestimos = []
-    list_juros = []
-    list_nao_realizavel = []
-    list_ciclos = []
-    list_rentabilidade = []
-
-    for ticker in list_ticker:
-        list_basicos = []
-        for trimestre in list_tri:
-            df = dataframe(ticker, trimestre)
-            list_df.append(df)
-
-            basicos = indices_basicos(df)
-            liquidas = indices_liquidez(basicos)
-            giro = indices_giro_tesouraria(basicos)
-            endividamento = indices_endividamento(basicos)
-            emprestimo = indices_emprestimos(basicos)
-            juros = indices_juros(basicos)
-            nao_realizavel = indice_nao_realizavel(basicos)
-            rentabilidade = indices_rentabilidade(basicos)
-
-            list_basicos.append(basicos)
-
-            list_liquidez.append(liquidas)
-            list_giro_tesouraria.append(giro)
-            list_endividamento.append(endividamento)
-            list_emprestimos.append(emprestimo)
-            list_juros.append(juros)
-            list_nao_realizavel.append(nao_realizavel)
-            list_rentabilidade.append(rentabilidade)
-
-            print_dict("Índices Básicos",        ticker, trimestre, basicos)
-            print_dict("Índices de Liquidez",     ticker, trimestre, liquidas)
-            print_dict("Giro de Tesouraria",      ticker, trimestre, giro)
-            print_dict("Índice de Endividamento", ticker, trimestre, endividamento)
-            print_dict("Empréstimos",             ticker, trimestre, emprestimo)
-            print_dict("Índice de Juros",         ticker, trimestre, juros)
-            print_dict("Não Realizável",          ticker, trimestre, nao_realizavel)
-            print_dict("Rentabilidade",          ticker, trimestre, rentabilidade)
-
-        
-        ciclos = indices_ciclos(list_basicos[0], list_basicos[1])
-        list_basicos.clear()
-
-        list_ciclos.append(ciclos)
-
-        # imprime ciclos
-        header = f"Ciclos — {ticker} — {list_tri[0]} & {list_tri[1]}"
-        print(header)
-        for key, value in ciclos.items():
-            print(f"  {key}: {value}")
-        print()
-
-main()

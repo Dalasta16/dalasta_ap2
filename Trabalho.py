@@ -16,10 +16,6 @@ def valor_contabil_2(df, conta, descricao):
 #2024 4T
 arquivo = 'C:\\Users\\CRDalas\\Desktop\\Programacao\\Análise de Dados\\Trabalho_Cont\\dados\\vulc.xlsx'
 df = pd.read_excel(arquivo)
-#pesquisar
-df[df['descricao'].str.contains('^', case=False)][['conta','descricao','valor']]
-
-
 #AC e PC
 Ativo_C_24 = valor_contabil(df, '^1.0', '^ativo cir')
 Passivo_C_24 = valor_contabil(df, '^2.0', '^passivo cir')
@@ -153,6 +149,10 @@ df_23 = pd.DataFrame(balanco)
 
 #pesquisar
 df_23[df_23['descricao'].str.contains('antes', case=False)][['conta','descricao','valor']]
+#pesquisar
+df_23[df['descricao'].str.contains('l.quido', case=False)][['conta','descricao','valor']]
+
+Ebit = valor_contabil(df, '^3.', 'imposto de renda')
 
 #AC e PC
 Ativo_C_23 = valor_contabil(df_23, '^1.0', '^ativo cir')
