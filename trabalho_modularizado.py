@@ -65,6 +65,7 @@ def indices_basicos(df):
     Ebit = valor_contabil(df, '^3.0', 'Resultado Antes do Resultado')
     Amortizacao = valor_contabil(df, '^6.0', 'Amortiza')
     Lucro_Liquido = valor_contabil(df, '^3.', 'Consolidado')
+    Ke = 0.1725
     
     return {
         'Ativo_C'            : Ativo_C,
@@ -98,7 +99,8 @@ def indices_basicos(df):
         'Fornecedor'         : Fornecedor,
         'Ebit'               : Ebit,
         'Amortizacao'        : Amortizacao,
-        'Lucro_Liquido'      : Lucro_Liquido
+        'Lucro_Liquido'      : Lucro_Liquido,
+        'Ke'                 : Ke
     }
 
 def indices_liquidez(indices_basicos):
@@ -285,6 +287,20 @@ def indices_rentabilidade(indices_basicos):
         'Gaf'   : Gaf
     }
 
+def indices_valor_agregado(indices_basicos, indices_juros, indices_rentabilidade):
+    Custo_MPC = indices_juros['Custo_MPC']
+    Investimento = indices_basicos['Investimento']
+    Ebit = indices_basicos['Ebit']
+    Roe = indices_rentabilidade['Roe']
+    Ke = indices_basicos['Ke']
+
+    Eva = Ebit-(Investimento*Custo_MPC)
+    Spread = Roe-Ke
+    return {
+        'Eva'    : Eva,
+        'Spread' : Spread
+    }
+
 def print_dict(name, ticker, trimestre, data):
     print(f"{name} — {ticker} — {trimestre}")
     for key, value in data.items():
@@ -314,6 +330,7 @@ def main():
     list_nao_realizavel = []
     list_ciclos = []
     list_rentabilidade = []
+    list_valor_agregado = []
 
     for ticker in list_ticker:
         list_basicos = []
@@ -329,6 +346,7 @@ def main():
             juros = indices_juros(basicos)
             nao_realizavel = indice_nao_realizavel(basicos)
             rentabilidade = indices_rentabilidade(basicos)
+            valor_agregado = indices_valor_agregado(basicos, juros, rentabilidade)
 
             list_basicos.append(basicos)
 
@@ -339,6 +357,7 @@ def main():
             list_juros.append(juros)
             list_nao_realizavel.append(nao_realizavel)
             list_rentabilidade.append(rentabilidade)
+            list_valor_agregado.append(valor_agregado)
 
             print_dict("Índices Básicos",        ticker, trimestre, basicos)
             print_dict("Índices de Liquidez",     ticker, trimestre, liquidas)
@@ -348,6 +367,7 @@ def main():
             print_dict("Índice de Juros",         ticker, trimestre, juros)
             print_dict("Não Realizável",          ticker, trimestre, nao_realizavel)
             print_dict("Rentabilidade",          ticker, trimestre, rentabilidade)
+            print_dict("Valor Agregado",          ticker, trimestre, valor_agregado)
 
         
         ciclos = indices_ciclos(list_basicos[0], list_basicos[1])

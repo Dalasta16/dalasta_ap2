@@ -64,6 +64,7 @@ def indices_basicos(df):
     Ebit = valor_contabil(df, '^3.0', 'Resultado Antes do Resultado')
     Amortizacao = valor_contabil(df, '^6.0', 'Amortiza')
     Lucro_Liquido = valor_contabil(df, '^3.', 'Consolidado')
+    Ke = 0.1725
     
     return {
         'Ativo_C'            : Ativo_C,
@@ -97,7 +98,8 @@ def indices_basicos(df):
         'Fornecedor'         : Fornecedor,
         'Ebit'               : Ebit,
         'Amortizacao'        : Amortizacao,
-        'Lucro_Liquido'      : Lucro_Liquido
+        'Lucro_Liquido'      : Lucro_Liquido,
+        'Ke'                 : Ke
     }
 
 def indices_liquidez(indices_basicos):
@@ -247,6 +249,20 @@ def indices_rentabilidade(indices_basicos):
         'Roi'   : Roi,
         'Roe'   : Roe,
         'Gaf'   : Gaf
+    }
+
+def indices_valor_agregado(indices_basicos, indices_juros, indices_rentabilidade):
+    Custo_MPC = indices_juros['Custo_MPC']
+    Investimento = indices_basicos['Investimento']
+    Ebit = indices_basicos['Ebit']
+    Roe = indices_rentabilidade['Roe']
+    Ke = indices_basicos['Ke']
+
+    Eva = Ebit-(Investimento*Custo_MPC)
+    Spread = Roe-Ke
+    return {
+        'Eva'    : Eva,
+        'Spread' : Spread
     }
 
 def indices_ciclos(basicos_23, basicos_24):
