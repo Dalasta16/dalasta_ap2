@@ -2,7 +2,7 @@ import pandas as pd
 import requests
 import streamlit
 
-def dataframe(ticker, trimestre):
+def balanco(ticker, trimestre):
     token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ3OTEyOTAwLCJpYXQiOjE3NDUzMjA5MDAsImp0aSI6IjQ1MWIyZWM5YTAxMTQ4YjRiZDYxZDQ4MGI0YmM1OWU1IiwidXNlcl9pZCI6NjB9.kssQqfnXMDQxA_gny7-6Hfoaj5DGhfFjYAh_CwC6Yp8"
     headers = {'Authorization': 'JWT {}'.format(token)}
     empresa = f"{ticker}"
@@ -18,6 +18,26 @@ def dataframe(ticker, trimestre):
     dados = r.json()['dados'][0]
     balanco = dados['balanco']
     df = pd.DataFrame(balanco)
+    return df
+
+def preco_corrigido(ticker, trimestre, trimestre_2):
+    token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ3OTEyOTAwLCJpYXQiOjE3NDUzMjA5MDAsImp0aSI6IjQ1MWIyZWM5YTAxMTQ4YjRiZDYxZDQ4MGI0YmM1OWU1IiwidXNlcl9pZCI6NjB9.kssQqfnXMDQxA_gny7-6Hfoaj5DGhfFjYAh_CwC6Yp8"
+    headers = {'Authorization': 'JWT {}'.format(token)}
+    empresa = f"{ticker}"
+    data_ini = f"{trimestre}"
+    data_fim = f"{trimestre_2}"
+    
+    params = {
+    'ticker': empresa,
+    'data_ini': data_ini,
+    'data_fim': data_fim
+    }
+
+    r = requests.get('https://laboratoriodefinancas.com/api/v1/preco-corrigido',params=params, headers=headers)
+    r.json().keys()
+    dados = r.json()['dados'][0]
+    preco_corrigido = dados['preco-corrigido']
+    df = pd.DataFrame(preco_corrigido)
     return df
 
 def valor_contabil(df, conta, descricao):
@@ -298,7 +318,8 @@ def indices_valor_agregado(indices_basicos, indices_juros, indices_rentabilidade
     Spread = Roe-Ke
     return {
         'Eva'    : Eva,
-        'Spread' : Spread
+        'Spread' : Spread,
+        'Roe'    : Roe
     }
 
 def print_dict(name, ticker, trimestre, data):
@@ -306,6 +327,7 @@ def print_dict(name, ticker, trimestre, data):
     for key, value in data.items():
         print(f"  {key}: {value}")
     print()
+
 
 def main():
 
@@ -332,10 +354,13 @@ def main():
     list_rentabilidade = []
     list_valor_agregado = []
 
+    ticker_repetidos = []
+
     for ticker in list_ticker:
         list_basicos = []
         for trimestre in list_tri:
-            df = dataframe(ticker, trimestre)
+            ticker_repetidos.append(ticker)
+            df = balanco(ticker, trimestre)
             list_df.append(df)
 
             basicos = indices_basicos(df)
@@ -374,12 +399,16 @@ def main():
         list_basicos.clear()
 
         list_ciclos.append(ciclos)
-
+       
         # imprime ciclos
         header = f"Ciclos — {ticker} — {list_tri[0]} & {list_tri[1]}"
         print(header)
         for key, value in ciclos.items():
             print(f"  {key}: {value}")
         print()
+    df_valor_agregado = pd.DataFrame(list_valor_agregado)
+    df_valor_agregado['Ticker'] = ticker_repetidos
+    print(df_valor_agregado)
 
+   
 main()

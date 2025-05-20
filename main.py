@@ -3,6 +3,7 @@ from modulos import (dataframe, valor_contabil, valor_contabil_2, indices_basico
                       indices_juros, indice_nao_realizavel, indices_ciclos, indices_rentabilidade,
                         indices_valor_agregado, print_dict)
 
+import pandas as pd
 def main():
 
     list_ticker = []
@@ -28,9 +29,12 @@ def main():
     list_rentabilidade = []
     list_valor_agregado = []
 
+    ticker_repetidos = []
+
     for ticker in list_ticker:
         list_basicos = []
         for trimestre in list_tri:
+            ticker_repetidos.append(ticker)
             df = dataframe(ticker, trimestre)
             list_df.append(df)
 
@@ -77,5 +81,10 @@ def main():
         for key, value in ciclos.items():
             print(f"  {key}: {value}")
         print()
+     
+    #Dataframe
+    df_valor_agregado = pd.DataFrame(list_valor_agregado)
+    df_valor_agregado['Ticker'] = ticker_repetidos
+    print(df_valor_agregado)
 
 main()

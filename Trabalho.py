@@ -136,7 +136,7 @@ headers = {'Authorization': 'JWT {}'.format(token)}
 
 params = {
 'ticker': 'VULC4',
-'ano_tri': '20234T',
+'ano_tri': '20244T',
 }
 
 r = requests.get('https://laboratoriodefinancas.com/api/v1/balanco',params=params, headers=headers)
@@ -145,10 +145,25 @@ dados = r.json()['dados'][0]
 balanco = dados['balanco']
 df_23 = pd.DataFrame(balanco)
 
- 
 
+import requests
+
+token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ3OTEyOTAwLCJpYXQiOjE3NDUzMjA5MDAsImp0aSI6IjQ1MWIyZWM5YTAxMTQ4YjRiZDYxZDQ4MGI0YmM1OWU1IiwidXNlcl9pZCI6NjB9.kssQqfnXMDQxA_gny7-6Hfoaj5DGhfFjYAh_CwC6Yp8"
+headers = {'Authorization': 'JWT {}'.format(token)}
+
+params = {
+'ticker': 'VULC4',
+'data_ini': '2023-01-01',
+'data_fim': '2024-01-01'
+}
+
+r = requests.get('https://laboratoriodefinancas.com/api/v1/preco-corrigido',params=params, headers=headers)
+r.json().keys()
+dados = r.json()['dados'][0]
+preco_corrigido = dados['preco-corrigido']
+df = pd.DataFrame(preco_corrigido)
 #pesquisar
-df_23[df_23['descricao'].str.contains('antes', case=False)][['conta','descricao','valor']]
+df_23[df_23['descricao'].str.contains('fechamento', case=False)][['conta','descricao','valor']]
 #pesquisar
 df_23[df['descricao'].str.contains('l.quido', case=False)][['conta','descricao','valor']]
 
