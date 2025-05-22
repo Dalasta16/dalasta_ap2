@@ -1,9 +1,9 @@
 import pandas as pd
 import requests
-import streamlit
+#import streamlit
 
 def balanco(ticker, trimestre):
-    token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ3OTEyOTAwLCJpYXQiOjE3NDUzMjA5MDAsImp0aSI6IjQ1MWIyZWM5YTAxMTQ4YjRiZDYxZDQ4MGI0YmM1OWU1IiwidXNlcl9pZCI6NjB9.kssQqfnXMDQxA_gny7-6Hfoaj5DGhfFjYAh_CwC6Yp8"
+    token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUwNTA1OTk5LCJpYXQiOjE3NDc5MTM5OTIsImp0aSI6ImJjZjYyZDU4MjczZTQ5ODk5YzQ1OTYxN2EzYmJlYTU3IiwidXNlcl9pZCI6NjB9.yCoOx02C1afro9EzYfWzit1RbJt2IuDHOSojPdPeIKE"
     headers = {'Authorization': 'JWT {}'.format(token)}
     empresa = f"{ticker}"
     data = f"{trimestre}"
@@ -21,11 +21,11 @@ def balanco(ticker, trimestre):
     return df
 
 def preco_corrigido(ticker, dataini, datafim):
-    token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ3OTEyOTAwLCJpYXQiOjE3NDUzMjA5MDAsImp0aSI6IjQ1MWIyZWM5YTAxMTQ4YjRiZDYxZDQ4MGI0YmM1OWU1IiwidXNlcl9pZCI6NjB9.kssQqfnXMDQxA_gny7-6Hfoaj5DGhfFjYAh_CwC6Yp8"
+    token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUwNTA1OTk5LCJpYXQiOjE3NDc5MTM5OTIsImp0aSI6ImJjZjYyZDU4MjczZTQ5ODk5YzQ1OTYxN2EzYmJlYTU3IiwidXNlcl9pZCI6NjB9.yCoOx02C1afro9EzYfWzit1RbJt2IuDHOSojPdPeIKE"
     headers = {'Authorization': 'JWT {}'.format(token)}
     empresa = f"{ticker}"
-    data_ini = f"{datafim}"
-    data_fim = f"{dataini}"
+    data_ini = f"{dataini}"
+    data_fim = f"{datafim}"
     
     params = {
     'ticker': empresa,
@@ -42,7 +42,7 @@ def preco_corrigido(ticker, dataini, datafim):
 
 def valor_acao(df):
     preco_ini = df.iloc[0]['fechamento']
-    preco_fim = df.iloc[1]['fechamento']
+    preco_fim = df.iloc[-1]['fechamento']
     lucro_acao = preco_fim/preco_ini
     return {
         'preco_ini' : preco_ini,
@@ -338,6 +338,12 @@ def print_dict(name, ticker, trimestre, data):
         print(f"  {key}: {value}")
     print()
 
+def print_dict_2(name, ticker, dataini, datafim, data):
+    print(f"{name} — {ticker} — {dataini}/{datafim}")
+    for key, value in data.items():
+        print(f"  {key}: {value}")
+    print()
+
 
 def main():
 
@@ -365,14 +371,6 @@ def main():
     list_valor_agregado = []
 
     ticker_repetidos = []
-
-    list_df2 = []
-    list_data_fim = []
-    list_data_fim.append('2025-03-31')
-    list_data_ini = []
-    list_data_ini.append('2024-04-1')
-    list_data_ini.append('2020-04-1')
-    list_data_ini.append('2015-04-1')
 
     for ticker in list_ticker:
         list_basicos = []
@@ -428,12 +426,24 @@ def main():
     df_valor_agregado['Ticker'] = ticker_repetidos
     print(df_valor_agregado)
     
+    list_df2 = []
+    list_data_fim = []
+    list_data_fim.append('2025-03-31')
+    list_data_ini = []
+    list_data_ini.append('2024-04-1')
+    list_data_ini.append('2020-04-1')
+    list_data_ini.append('2015-04-1')
 
+    list_valor_acao = []
     for ticker in list_ticker:
         for datafim in list_data_fim:
             for dataini in list_data_ini:
                 df = preco_corrigido(ticker, dataini, datafim)
                 list_df2.append(df)
+                valores_acao = valor_acao(df)
+
+                list_valor_acao.append(valores_acao)
+                print_dict_2("Valores da Ação", ticker, dataini, datafim, valores_acao)
                 
                 
 
