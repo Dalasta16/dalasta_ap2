@@ -20,12 +20,12 @@ def balanco(ticker, trimestre):
     df = pd.DataFrame(balanco)
     return df
 
-def preco_corrigido(ticker, trimestre, trimestre_2):
+def preco_corrigido(ticker, dataini, datafim):
     token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ3OTEyOTAwLCJpYXQiOjE3NDUzMjA5MDAsImp0aSI6IjQ1MWIyZWM5YTAxMTQ4YjRiZDYxZDQ4MGI0YmM1OWU1IiwidXNlcl9pZCI6NjB9.kssQqfnXMDQxA_gny7-6Hfoaj5DGhfFjYAh_CwC6Yp8"
     headers = {'Authorization': 'JWT {}'.format(token)}
     empresa = f"{ticker}"
-    data_ini = f"{trimestre}"
-    data_fim = f"{trimestre_2}"
+    data_ini = f"{datafim}"
+    data_fim = f"{dataini}"
     
     params = {
     'ticker': empresa,
@@ -35,10 +35,20 @@ def preco_corrigido(ticker, trimestre, trimestre_2):
 
     r = requests.get('https://laboratoriodefinancas.com/api/v1/preco-corrigido',params=params, headers=headers)
     r.json().keys()
-    dados = r.json()['dados'][0]
-    preco_corrigido = dados['preco-corrigido']
-    df = pd.DataFrame(preco_corrigido)
+    dados = r.json()['dados']
+    df = pd.DataFrame(dados)
+
     return df
+
+def valor_acao(df):
+    preco_ini = df.iloc[0]['fechamento']
+    preco_fim = df.iloc[1]['fechamento']
+    lucro_acao = preco_fim/preco_ini
+    return {
+        'preco_ini' : preco_ini,
+        'preco_fim' : preco_fim,
+        'lucro_acao': lucro_acao
+    }
 
 def valor_contabil(df, conta, descricao):
     filtro_conta = df['conta'].str.contains(conta, case=False)
@@ -332,7 +342,7 @@ def print_dict(name, ticker, trimestre, data):
 def main():
 
     list_ticker = []
-    list_ticker.append("VULC4")
+    list_ticker.append("VULC3")
     list_ticker.append("AZZA3")
     list_ticker.append("GRND3")
     list_ticker.append("ALPA4")
@@ -342,7 +352,7 @@ def main():
     list_tri = []
     list_tri.append("20234T")
     list_tri.append("20244T")
-    
+      
     list_df = []
     list_liquidez = []
     list_giro_tesouraria = []
@@ -355,6 +365,14 @@ def main():
     list_valor_agregado = []
 
     ticker_repetidos = []
+
+    list_df2 = []
+    list_data_fim = []
+    list_data_fim.append('2025-03-31')
+    list_data_ini = []
+    list_data_ini.append('2024-04-1')
+    list_data_ini.append('2020-04-1')
+    list_data_ini.append('2015-04-1')
 
     for ticker in list_ticker:
         list_basicos = []
@@ -409,6 +427,15 @@ def main():
     df_valor_agregado = pd.DataFrame(list_valor_agregado)
     df_valor_agregado['Ticker'] = ticker_repetidos
     print(df_valor_agregado)
+    
+
+    for ticker in list_ticker:
+        for datafim in list_data_fim:
+            for dataini in list_data_ini:
+                df = preco_corrigido(ticker, dataini, datafim)
+                list_df2.append(df)
+                
+                
 
    
 main()

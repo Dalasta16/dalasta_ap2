@@ -135,7 +135,7 @@ token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZX
 headers = {'Authorization': 'JWT {}'.format(token)}
 
 params = {
-'ticker': 'VULC4',
+'ticker': 'VULC3',
 'ano_tri': '20244T',
 }
 
@@ -145,23 +145,30 @@ dados = r.json()['dados'][0]
 balanco = dados['balanco']
 df_23 = pd.DataFrame(balanco)
 
-
+import pandas as pd
 import requests
 
 token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ3OTEyOTAwLCJpYXQiOjE3NDUzMjA5MDAsImp0aSI6IjQ1MWIyZWM5YTAxMTQ4YjRiZDYxZDQ4MGI0YmM1OWU1IiwidXNlcl9pZCI6NjB9.kssQqfnXMDQxA_gny7-6Hfoaj5DGhfFjYAh_CwC6Yp8"
 headers = {'Authorization': 'JWT {}'.format(token)}
 
 params = {
-'ticker': 'VULC4',
-'data_ini': '2023-01-01',
-'data_fim': '2024-01-01'
+'ticker': 'VULC3',
+'data_ini': '2024-04-01',
+'data_fim': '2025-03-31'
 }
 
 r = requests.get('https://laboratoriodefinancas.com/api/v1/preco-corrigido',params=params, headers=headers)
 r.json().keys()
-dados = r.json()['dados'][0]
-preco_corrigido = dados['preco-corrigido']
-df = pd.DataFrame(preco_corrigido)
+dados = r.json()['dados']
+df = pd.DataFrame(dados)
+
+preco_ini = df.iloc[0]['fechamento']
+preco_fim = df.iloc[-1]['fechamento']
+lucro = preco_fim/preco_ini
+
+print("Preço inicial:", preco_ini)
+print("Preço final:", preco_fim)
+print("Lucro (fator):", lucro) 
 #pesquisar
 df_23[df_23['descricao'].str.contains('fechamento', case=False)][['conta','descricao','valor']]
 #pesquisar
