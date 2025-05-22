@@ -428,11 +428,11 @@ def main():
     
     list_df2 = []
     list_data_fim = []
-    list_data_fim.append('2025-03-31')
+    list_data_fim.append('2024-03-31')
     list_data_ini = []
-    list_data_ini.append('2024-04-1')
-    list_data_ini.append('2020-04-1')
-    list_data_ini.append('2015-04-1')
+    list_data_ini.append('2023-04-1')
+    list_data_ini.append('2019-04-1')
+    list_data_ini.append('2014-04-1')
 
     list_valor_acao = []
     for ticker in list_ticker:
