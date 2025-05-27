@@ -3,7 +3,7 @@ import requests
 #import streamlit
 
 def balanco(ticker, trimestre):
-    token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUwNTA1OTk5LCJpYXQiOjE3NDc5MTM5OTIsImp0aSI6ImJjZjYyZDU4MjczZTQ5ODk5YzQ1OTYxN2EzYmJlYTU3IiwidXNlcl9pZCI6NjB9.yCoOx02C1afro9EzYfWzit1RbJt2IuDHOSojPdPeIKE"
+    token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUwOTM2MTM1LCJpYXQiOjE3NDgzNDQxMjgsImp0aSI6ImY4NjNhZGRkYTFkODRjZjhiZDc0OWFlMjUyMmIwZmU0IiwidXNlcl9pZCI6NjB9.pQhEaGjktwciW2mf_gafrrmPbquQ9E4-G6FUFzYTXfE"
     headers = {'Authorization': 'JWT {}'.format(token)}
     empresa = f"{ticker}"
     data = f"{trimestre}"
@@ -21,7 +21,7 @@ def balanco(ticker, trimestre):
     return df
 
 def preco_corrigido(ticker, dataini, datafim):
-    token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUwNTA1OTk5LCJpYXQiOjE3NDc5MTM5OTIsImp0aSI6ImJjZjYyZDU4MjczZTQ5ODk5YzQ1OTYxN2EzYmJlYTU3IiwidXNlcl9pZCI6NjB9.yCoOx02C1afro9EzYfWzit1RbJt2IuDHOSojPdPeIKE"
+    token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUwOTM2MTM1LCJpYXQiOjE3NDgzNDQxMjgsImp0aSI6ImY4NjNhZGRkYTFkODRjZjhiZDc0OWFlMjUyMmIwZmU0IiwidXNlcl9pZCI6NjB9.pQhEaGjktwciW2mf_gafrrmPbquQ9E4-G6FUFzYTXfE"
     headers = {'Authorization': 'JWT {}'.format(token)}
     empresa = f"{ticker}"
     data_ini = f"{dataini}"
@@ -426,16 +426,26 @@ def main():
     df_valor_agregado['Ticker'] = ticker_repetidos
     print(df_valor_agregado)
     
+
+    list_ticker_2 = []
+    list_ticker_2.append("VULC3")
+    list_ticker_2.append("AZZA3")
+    list_ticker_2.append("GRND3")
+    list_ticker_2.append("ALPA4")
+    list_ticker_2.append("CAMB3")
+    list_ticker_2.append("SBFG3")
+    list_ticker_2.append("ibov")
+
     list_df2 = []
     list_data_fim = []
-    list_data_fim.append('2024-03-31')
+    list_data_fim.append('2025-03-31')
     list_data_ini = []
     list_data_ini.append('2023-04-1')
     list_data_ini.append('2019-04-1')
     list_data_ini.append('2014-04-1')
 
     list_valor_acao = []
-    for ticker in list_ticker:
+    for ticker in list_ticker_2:
         for datafim in list_data_fim:
             for dataini in list_data_ini:
                 df = preco_corrigido(ticker, dataini, datafim)
