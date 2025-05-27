@@ -32,8 +32,10 @@ def preco_corrigido(ticker, dataini, datafim):
     'data_ini': data_ini,
     'data_fim': data_fim
     }
-
-    r = requests.get('https://laboratoriodefinancas.com/api/v1/preco-corrigido',params=params, headers=headers)
+    if ticker ==  'ibov':
+        r = requests.get('https://laboratoriodefinancas.com/api/preco-diversos', params=params)
+    else:
+        r = requests.get('https://laboratoriodefinancas.com/api/v1/preco-corrigido',params=params, headers=headers)
     r.json().keys()
     dados = r.json()['dados']
     df = pd.DataFrame(dados)
@@ -455,7 +457,7 @@ def main():
                 list_valor_acao.append(valores_acao)
                 print_dict_2("Valores da Ação", ticker, dataini, datafim, valores_acao)
                 
-                
+
 
    
 main()

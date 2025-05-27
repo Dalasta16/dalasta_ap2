@@ -148,11 +148,11 @@ df_23 = pd.DataFrame(balanco)
 import pandas as pd
 import requests
 
-token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ3OTEyOTAwLCJpYXQiOjE3NDUzMjA5MDAsImp0aSI6IjQ1MWIyZWM5YTAxMTQ4YjRiZDYxZDQ4MGI0YmM1OWU1IiwidXNlcl9pZCI6NjB9.kssQqfnXMDQxA_gny7-6Hfoaj5DGhfFjYAh_CwC6Yp8"
+token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUwOTM2MTM1LCJpYXQiOjE3NDgzNDQxMjgsImp0aSI6ImY4NjNhZGRkYTFkODRjZjhiZDc0OWFlMjUyMmIwZmU0IiwidXNlcl9pZCI6NjB9.pQhEaGjktwciW2mf_gafrrmPbquQ9E4-G6FUFzYTXfE"
 headers = {'Authorization': 'JWT {}'.format(token)}
 
 params = {
-'ticker': 'VULC3',
+'ticker': 'ibov',
 'data_ini': '2024-04-01',
 'data_fim': '2025-03-31'
 }
