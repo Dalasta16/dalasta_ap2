@@ -7,7 +7,6 @@ from datetime import datetime
 pio.renderers.default = "browser"
 import dash
 from dash import dcc, html, Input, Output
-#import streamlit
 
 def balanco(ticker, trimestre):
     token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzUwOTM2MTM1LCJpYXQiOjE3NDgzNDQxMjgsImp0aSI6ImY4NjNhZGRkYTFkODRjZjhiZDc0OWFlMjUyMmIwZmU0IiwidXNlcl9pZCI6NjB9.pQhEaGjktwciW2mf_gafrrmPbquQ9E4-G6FUFzYTXfE"
@@ -351,7 +350,6 @@ def print_dict_2(name, ticker, dataini, datafim, data):
         print(f"  {key}: {value}")
     print()
 
-
 def rodar_dashboard_multi(preco_corrigido_func, tickers, datas_ini, data_fim):
     """
     Roda um app Dash para visualizar preços normalizados com seleção multi-tickers e período único.
@@ -549,7 +547,5 @@ def main():
     datas_ini=list_data_ini,
     data_fim=list_data_fim[0])
 
-
-
-   
+  
 main()
