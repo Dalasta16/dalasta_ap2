@@ -1,5 +1,12 @@
 import pandas as pd
 import requests
+import matplotlib.pyplot as plt
+import plotly.graph_objects as go
+import plotly.io as pio
+from datetime import datetime
+pio.renderers.default = "browser"
+import dash
+from dash import dcc, html, Input, Output
 #import streamlit
 
 def balanco(ticker, trimestre):
@@ -26,20 +33,18 @@ def preco_corrigido(ticker, dataini, datafim):
     empresa = f"{ticker}"
     data_ini = f"{dataini}"
     data_fim = f"{datafim}"
-    
     params = {
     'ticker': empresa,
     'data_ini': data_ini,
     'data_fim': data_fim
     }
-    if ticker ==  'ibov':
-        r = requests.get('https://laboratoriodefinancas.com/api/preco-diversos', params=params)
+    if ticker=='ibov':
+        r = requests.get('https://laboratoriodefinancas.com/api/v1/preco-diversos',params=params, headers=headers)
     else:
         r = requests.get('https://laboratoriodefinancas.com/api/v1/preco-corrigido',params=params, headers=headers)
     r.json().keys()
     dados = r.json()['dados']
     df = pd.DataFrame(dados)
-
     return df
 
 def valor_acao(df):
@@ -347,6 +352,87 @@ def print_dict_2(name, ticker, dataini, datafim, data):
     print()
 
 
+def rodar_dashboard_multi(preco_corrigido_func, tickers, datas_ini, data_fim):
+    """
+    Roda um app Dash para visualizar preços normalizados com seleção multi-tickers e período único.
+
+    preco_corrigido_func: função (ticker, dataini, datafim) -> DataFrame ['data','fechamento']
+    tickers: lista de tickers (ex: ['VULC3', 'AZZA3', ..., 'ibov'])
+    datas_ini: lista de strings com datas iniciais (ex: ['2023-04-01', '2019-04-01', '2015-04-01'])
+    data_fim: string com data final (ex: '2025-03-31')
+    """
+
+    # Pré-carrega dados para não atrasar a interação
+    dados = {}
+    for ticker in tickers:
+        dados[ticker] = {}
+        for dataini in datas_ini:
+            df = preco_corrigido_func(ticker, dataini, data_fim)
+            df['data'] = pd.to_datetime(df['data'])
+            df = df.sort_values('data')
+            df['preco_norm'] = df['fechamento'] / df['fechamento'].iloc[0] * 100
+            dados[ticker][dataini] = df
+
+    app = dash.Dash(__name__)
+
+    app.layout = html.Div([
+        html.H2("Dashboard: Preços Normalizados — Múltiplos Tickers"),
+        html.Div([
+            html.Label("Escolha os tickers:"),
+            dcc.Dropdown(
+                id='ticker-dropdown',
+                options=[{'label': t, 'value': t} for t in tickers],
+                value=[tickers[0]],  # valor inicial como lista
+                multi=True,
+                clearable=False,
+                style={'width': '48%'}
+            ),
+            html.Label("Escolha o período inicial:"),
+            dcc.Dropdown(
+                id='periodo-dropdown',
+                options=[{'label': d, 'value': d} for d in datas_ini],
+                value=datas_ini[0],
+                clearable=False,
+                style={'width': '48%', 'marginTop': '10px'}
+            )
+        ], style={'display': 'flex', 'justifyContent': 'space-between'}),
+        dcc.Graph(id='grafico-precos')
+    ])
+
+    @app.callback(
+        Output('grafico-precos', 'figure'),
+        Input('ticker-dropdown', 'value'),
+        Input('periodo-dropdown', 'value')
+    )
+    def atualizar_grafico(tickers_selecionados, periodo_selecionado):
+        fig = go.Figure()
+        # garantir que tickers_selecionados seja lista
+        if isinstance(tickers_selecionados, str):
+            tickers_selecionados = [tickers_selecionados]
+
+        for ticker in tickers_selecionados:
+            df = dados[ticker][periodo_selecionado]
+            fig.add_trace(go.Scatter(
+                x=df['data'],
+                y=df['preco_norm'],
+                mode='lines',
+                name=f'{ticker} ({periodo_selecionado})',
+                line=dict(width=3)
+            ))
+
+        fig.update_layout(
+            title=f'Preços Normalizados — Período {periodo_selecionado}',
+            xaxis_title='Data',
+            yaxis_title='Índice Normalizado (Base 100)',
+            template='plotly_white',
+            hovermode='x unified',
+        )
+        return fig
+
+    app.run(debug=False)
+
+
+
 def main():
 
     list_ticker = []
@@ -442,9 +528,9 @@ def main():
     list_data_fim = []
     list_data_fim.append('2025-03-31')
     list_data_ini = []
-    list_data_ini.append('2023-04-1')
-    list_data_ini.append('2019-04-1')
-    list_data_ini.append('2014-04-1')
+    list_data_ini.append('2023-04-01')
+    list_data_ini.append('2019-04-01')
+    list_data_ini.append('2014-04-01')
 
     list_valor_acao = []
     for ticker in list_ticker_2:
@@ -456,7 +542,13 @@ def main():
 
                 list_valor_acao.append(valores_acao)
                 print_dict_2("Valores da Ação", ticker, dataini, datafim, valores_acao)
-                
+    
+    rodar_dashboard_multi(
+    preco_corrigido_func=preco_corrigido,
+    tickers=list_ticker_2,
+    datas_ini=list_data_ini,
+    data_fim=list_data_fim[0])
+
 
 
    
